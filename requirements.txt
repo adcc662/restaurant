@@ -1,0 +1,9 @@
+fastapi[all]
+pydantic
+pytz
+redis
+requests
+SQLAlchemy
+uvicorn
+psycopg2-binary
+pandas

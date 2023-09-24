@@ -1,0 +1,26 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - '6400:5432'
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+  api:
+    build: .
+    container_name: api
+    restart: always
+    env_file:
+      - ./.env
+    ports:
+      - '8000:8000'
+    links:
+      - postgres
+    volumes:
+      - .:/app
+volumes:
+  postgres-db:
