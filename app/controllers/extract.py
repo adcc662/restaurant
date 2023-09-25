@@ -12,7 +12,6 @@ def row_to_restaurant(row):
     Convert a row to a Restaurant object
     """
     return Restaurant(
-        id=row['id'],
         raiting=row['rating'],
         name=row['name'],
         site=row['site'],
@@ -27,21 +26,17 @@ def row_to_restaurant(row):
 
 
 def main(db: Session):
-    # Lee el archivo CSV
+
     df = pd.read_csv('/app/app/controllers/restaurantes.csv')
 
-    # Obtén una sesión de la base de datos
     db = next(get_db())
 
-    # Itera sobre las filas del DataFrame y agrega registros a la base de datos
     for index, row in df.iterrows():
         restaurant = row_to_restaurant(row)
         db.add(restaurant)
 
-    # Realiza un commit de los cambios
     db.commit()
 
-    # Cierra la sesión de base de datos
     db.close()
 
 

@@ -11,7 +11,8 @@ class Restaurant(Base):
     Restaurant model
     """
     __tablename__ = 'restaurants'
-    id = Column(String(50), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_csv = Column(UUID(as_uuid=True),default=uuid.uuid4)
     raiting = Column(Integer, nullable=False)
     name = Column(String(50), nullable=True)
     site = Column(String(50), nullable=True)
