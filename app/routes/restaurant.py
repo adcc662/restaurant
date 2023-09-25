@@ -15,15 +15,6 @@ from sqlalchemy.orm import Session
 restaurant = APIRouter()
 
 
-@restaurant.post("/", response_model=RestaurantOut)
-async def create_restaurant_api(data: RestaurantIn, db: Session = Depends(get_db)):
-    """
-    Create a new restaurant
-    """
-    restaurant = await create_restaurant(data.dict(), db)
-    return restaurant
-
-
 @restaurant.get("/", response_model=list[RestaurantOut])
 async def get_all_restaurants_api(db: Session = Depends(get_db)):
     """
@@ -33,20 +24,21 @@ async def get_all_restaurants_api(db: Session = Depends(get_db)):
     return restaurants
 
 
-@restaurant.get("/{id}", response_model=RestaurantOut)
-async def get_restaurant_by_id_api(id: int, db: Session = Depends(get_db)):
+@restaurant.get("/statistics", response_model=dict)
+async def get_restaurants_statistics_api(latitude: float, longitude: float, radius: int,
+                                         db: Session = Depends(get_db)):
     """
-    Get a restaurant by id
+    Get restaurants statistics
     """
-    restaurant = await get_restaurant_by_id(id, db)
-    if not restaurant:
+    statistics = await get_restaurants_statistics(db, latitude, longitude, radius)
+    if statistics is None:
         raise HTTPException(status_code=404, detail="Restaurant not found")
-    return restaurant
+    return statistics
 
 
 @restaurant.get("/pagination", response_model=list[RestaurantOut])
 async def get_all_restaurants_pagination_api(db: Session = Depends(get_db),
-                                             page: int = 1, limit: int = 10):
+                                             page: int = 0, limit: int = 10):
     """
     Get all restaurants with pagination
     """
@@ -54,11 +46,37 @@ async def get_all_restaurants_pagination_api(db: Session = Depends(get_db),
     return restaurants
 
 
+@restaurant.get("/{id}", response_model=RestaurantOut)
+async def get_restaurant_by_id_api(id: int, db: Session = Depends(get_db)):
+    """
+    Get a restaurant by id routes
+    """
+    restaurant = await get_restaurant_by_id(id, db)
+    if not restaurant:
+        raise HTTPException(status_code=404, detail="Restaurant not found")
+    return restaurant
+
+
+@restaurant.post("/", response_model=RestaurantOut)
+async def create_restaurant_api(data: RestaurantIn, db: Session = Depends(get_db)):
+    """
+    Create a new restaurant
+    """
+    if data.raiting > 4:
+        raise HTTPException(
+            status_code=400, detail="Raiting must be less or equal to 4")
+    restaurant = await create_restaurant(data.model_dump(), db)
+    return restaurant
+
+
 @restaurant.put("/{id}", response_model=RestaurantOut)
 async def update_restaurant_api(id: int, data: RestaurantIn, db: Session = Depends(get_db)):
     """
     Update a restaurant by id
     """
+    if data.raiting > 4:
+        raise HTTPException(
+            status_code=400, detail="Raiting must be less or equal to 4")
     restaurant = await update_restaurant(id, data.dict(), db)
     if not restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
@@ -70,17 +88,7 @@ async def delete_restaurant_api(id: int, db: Session = Depends(get_db)):
     """
     Delete a restaurant by id
     """
-    restaurant = await delete_restaurant(id, db)
+    restaurant_delete = await delete_restaurant(id, db)
     if not restaurant:
         raise HTTPException(status_code=404, detail="Restaurant not found")
-    return restaurant
-
-
-@restaurant.get("/statistics", response_model=list[RestaurantDB])
-async def get_restaurants_statistics_api(latitude: float, longitude: float, radius: float,
-                                         db: Session = Depends(get_db)):
-    """
-    Get restaurants statistics
-    """
-    restaurants = await get_restaurants_statistics(db, latitude, longitude, radius)
-    return restaurants
+    return restaurant_delete
