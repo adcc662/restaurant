@@ -26,15 +26,19 @@ De este último solo hacer uso una vez y después usar solo `docker-compose up`.
    Abre tu navegador e ingresa a localhost:8000/docs. Verás la documentación generada automáticamente. Para cargar los datos del CSV a la base de datos, despliega el endpoint "extract" y haz clic en "Try it out" y luego en "execute". Una vez hecho esto, puedes probar el resto de los endpoints con la API.
 
 **API en localhost:8000/docs**
+
 ![This is an image](/images/all_api.png)
 
 **Try it out en la API**
+
 ![This is an image](/images/try_it_out_extract.png)
 
 **Execute**
+
 ![This is an image](/images/execute_extract.png)
 
 **Ejemplo de cuando queremos hacer un POST con todos los datos**
+
 ![This is an image](/images/data_collection.png)
 
 **Datos para la API**
@@ -84,15 +88,19 @@ From this point onward, only use `docker-compose up` once, then you can simply u
    Open your browser and navigate to localhost:8000/docs. You'll see the auto-generated documentation. To load the CSV data into the database, expand the "extract" endpoint and click "Try it out" followed by "execute". After this, you're free to test the rest of the API endpoints.
 
 **API at localhost:8000/docs**
+
 ![This is an image](/images/all_api.png)
 
 **Using 'Try it out' in the API**
+
 ![This is an image](/images/try_it_out_extract.png)
 
 **Execute**
+
 ![This is an image](/images/execute_extract.png)
 
 **Example of making a POST with all data fields**
+
 ![This is an image](/images/data_collection.png)
 
 **Sample data**
